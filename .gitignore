@@ -3,16 +3,14 @@
 .env.*
 !.env.example
 
+# Go
+*.exe
+*.test
+*.out
+vendor/
+
 # Node
 node_modules/
-frontend/node_modules/
-frontend/dist/
-
-# Go
-backend/bin/
-backend/tmp/
-
-# Build files
 dist/
 build/
 
