@@ -1,25 +1,28 @@
-# OS
-.DS_Store
-Thumbs.db
-
-# Env files
+# Environment variables
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
 # Node
+node_modules/
 frontend/node_modules/
 frontend/dist/
-frontend/.vite/
 
 # Go
 backend/bin/
-backend/*.exe
-backend/*.test
-backend/.cache/
+backend/tmp/
 
-# Docker volumes
-*.pid
+# Build files
+dist/
+build/
 
 # Logs
 *.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
