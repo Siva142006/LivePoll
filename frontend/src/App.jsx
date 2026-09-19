@@ -63,6 +63,8 @@ function App() {
   }, [user]);
 
   const signOut = () => {
+    localStorage.removeItem("livepoll_token");
+    localStorage.removeItem("livepoll_user");
     setToken("");
     setUser(null);
   };
@@ -70,6 +72,12 @@ function App() {
   const handleAuthSuccess = (nextUser, nextToken) => {
     setUser(nextUser);
     setToken(nextToken);
+    if (nextToken) {
+      localStorage.setItem("livepoll_token", nextToken);
+    }
+    if (nextUser) {
+      localStorage.setItem("livepoll_user", JSON.stringify(nextUser));
+    }
   };
 
   return (
@@ -302,7 +310,14 @@ function DashboardPage({ user, onLogout }) {
 
   useEffect(() => {
     const loadPolls = async () => {
+      if (!user) {
+        setPolls([]);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
+      setError("");
       try {
         const response = await apiFetch("/polls");
         setPolls(response.polls || []);
@@ -314,7 +329,7 @@ function DashboardPage({ user, onLogout }) {
     };
 
     loadPolls();
-  }, []);
+  }, [user?.id]);
 
   return (
     <div className="page-layout">
@@ -535,7 +550,16 @@ function PublicPollPage() {
 
   useEffect(() => {
     const loadPoll = async () => {
+      if (!pollId) {
+        return;
+      }
+
       setLoading(true);
+      setError("");
+      setPoll(null);
+      setSelectedOption("");
+      setVoterIdentifier("");
+
       try {
         const result = await apiFetch(`/polls/public/${pollId}`);
         const currentPoll = result.poll || result;
@@ -550,9 +574,7 @@ function PublicPollPage() {
       }
     };
 
-    if (pollId) {
-      loadPoll();
-    }
+    loadPoll();
   }, [pollId]);
 
   const handleVote = async (event) => {
